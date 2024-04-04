@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <opencv2/opencv.hpp>
+
+using namespace cv;
+
+int main(int argc, char** argv) {
+    // Check if image file is provided
+    if (argc != 2) {
+        printf("Usage: %s <image_path>\n", argv[0]);
+        return -1;
+    }
+
+    // Read the fingerprint image
+    Mat image = imread(argv[1], IMREAD_GRAYSCALE);
+    if (image.empty()) {
+        printf("Error: Couldn't open or read the image file\n");
+        return -1;
+    }
+
+    // Enhance the contrast of the image
+    Mat enhanced_image;
+    equalizeHist(image, enhanced_image);
+
+    // Perform simple binary thresholding
+    Mat binary_image;
+    threshold(enhanced_image, binary_image, 128, 255, THRESH_BINARY);
+
+    // Display the binary ridge map
+    imshow("Binary Ridge Map", binary_image);
+    waitKey(0);
+
+    return 0;
+}
